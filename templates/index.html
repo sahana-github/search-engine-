@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Support Group Name Finder</title>
+    <style>
+        /* Add your custom CSS styles here */
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .output-box {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Support Group Name Finder</h1>
+    
+    <!-- Input field for searching keywords -->
+    <input type="text" id="searchInput" class="input-field" placeholder="Search for Keywords">
+    
+    <!-- Output box to display matching Support Group Names -->
+    <div class="output-box" id="results"></div>
+
+    <script>
+        const searchInput = document.getElementById("searchInput");
+        const results = document.getElementById("results");
+
+        searchInput.addEventListener("input", () => {
+            const inputText = searchInput.value.trim().toLowerCase();
+
+            // Clear the results
+            results.innerHTML = "";
+
+            if (inputText.length === 0) {
+                return;
+            }
+
+            // Send the input to the server for matching results
+            fetch(`/get_matching_support_groups?query=${inputText}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Create a Set to prevent duplicates
+                    const uniqueResults = new Set(data);
+                    uniqueResults.forEach(result => {
+                        const resultItem = document.createElement("div");
+                        resultItem.textContent = result;
+                        results.appendChild(resultItem);
+                    });
+                });
+        });
+    </script>
+</body>
+</html>
